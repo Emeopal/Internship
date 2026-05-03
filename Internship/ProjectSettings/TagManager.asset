@@ -7,6 +7,9 @@ TagManager:
   - Tank
   - TankBuff
   - Buff
+  - Enemy
+  - Ground
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -16,9 +19,9 @@ TagManager:
   - UI
   - Player
   - Buff
-  - 
-  - 
-  - 
+  - Wall
+  - Enemy
+  - Ground
   - 
   - 
   - 

@@ -34,6 +34,10 @@ public class shield : Ibuff
     public void DoBuff(float duration)
     {
         timer = player.StartCoroutine(shieldBuff(duration));
+        if (player.coolHurtTimer != null)
+        {
+            player.StopCoroutine(player.coolHurtTimer);
+        }
     }
 
     IEnumerator shieldBuff(float duration)

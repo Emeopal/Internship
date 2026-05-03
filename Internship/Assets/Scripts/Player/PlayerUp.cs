@@ -4,16 +4,34 @@ using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 public class PlayerUp : MonoBehaviour
 {
+    public LineRenderer laser;
     public Player player; 
     public GameObject bullet;
     public GameObject temp;
+    public GameObject soundWaveBullet;
     public Transform shootPos;
+    public Transform laserShootPos;
+    public Transform shootPos_1;
+    public Transform shootPos_2;
+    public Transform soundWaveShootPos;
+
+    //初始化用
+    public Vector3 initRotation;
+    public Vector3 initPosition;
+
+    public PlayerDown playerDown;
+    public LayerMask targetLayer;
+    public LayerMask enemy;
 
     public float shootCoolTime = 0.5f;
+    public float force = 0.5f;
     public bool canShoot = true;
+    public Vector3 originPos;
+    public string[] targets = { "Enemy" };
     void Start()
     {
-        
+        initRotation=transform.localEulerAngles;
+        initPosition = transform.localPosition;
     }
 
     void Update()
@@ -26,7 +44,11 @@ public class PlayerUp : MonoBehaviour
         {
             StartCoroutine(coolShoot());
             RotateToMouse();
-            player.currentWeapon.Shoot(transform,shootPos,bullet);
+            player.currentWeapon.Shoot(transform,shootPos,bullet,"Enemy",player.currentReboundCount);
+            player.currentWeapon.Shoot(transform, shootPos_1, shootPos_2, bullet,"Enemy",player.currentReboundCount);
+            player.currentWeapon.Shoot(laser, laserShootPos, transform,targetLayer,enemy);
+            player.currentWeapon.Shoot(soundWaveShootPos, transform, soundWaveBullet,"Player",targets);
+            Offset(transform.forward);
         }
     }
 
@@ -35,6 +57,28 @@ public class PlayerUp : MonoBehaviour
         canShoot = false;
         yield return new WaitForSeconds(shootCoolTime);
         canShoot = true;
+    }
+
+    public void Offset(Vector3 dir)
+    {
+        originPos = transform.localPosition;
+        transform.localPosition -= dir * force;
+        StartCoroutine(MoveBack());
+    }
+
+    IEnumerator MoveBack()
+    {
+        while (Vector3.Distance(transform.localPosition, originPos) > .1f)
+        {
+            transform.localPosition = Vector3.MoveTowards(transform.localPosition, originPos, force * Time.fixedDeltaTime);
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
+    public void Init()
+    {
+        transform.localEulerAngles = initRotation;
+        transform.localPosition = initPosition;
     }
 
     #region 转向相关

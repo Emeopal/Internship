@@ -6,10 +6,11 @@ public class PlayerDown : MonoBehaviour
 {
     public Player player;
 
-
+    //≥ı ºªØ”√
+    public Vector3 initRotation;
+    public Vector3 initPosition;
     private void Start()
     {
-
 
     }
 
@@ -19,6 +20,13 @@ public class PlayerDown : MonoBehaviour
     }
     public void ChangeDirection()
     {
-        transform.LookAt(player.transform.position + player.dir);
+        if(player.horizontalNum!=0 || player.verticalNum!=0)
+            transform.LookAt(player.transform.position + player.dir);
+    }
+
+    public void Init()
+    {
+        transform.localEulerAngles = initRotation;
+        transform.localPosition = initPosition;
     }
 }

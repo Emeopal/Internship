@@ -5,12 +5,17 @@ using UnityEngine;
 public class NormalBullet_Player : MonoBehaviour
 {
     public Coroutine m_Pos;
+
     public Rigidbody bulletRB;
     public Transform startPos;
 
     public int reboundCount = 3;
     public int damage = 1;
+
     public FSM fsm;
+    public Player player;
+
+    public string enemy;
 
     public int ReboundCount
     {
@@ -37,14 +42,20 @@ public class NormalBullet_Player : MonoBehaviour
     IEnumerator InitPos()
     {
         yield return new WaitForFixedUpdate();
+        transform.localEulerAngles = new Vector3(90, transform.localEulerAngles.y, transform.localEulerAngles.z);
         transform.position = startPos.position;
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent<FSM>(out fsm))
+        if (other.gameObject.CompareTag(enemy))
         {
-            fsm.OnHurt(damage);
+            FSM enemyFSM;
+            if (other.TryGetComponent<FSM>(out enemyFSM))
+                enemyFSM.OnHurt(damage);
+            Player player;
+            if (other.TryGetComponent<Player>(out player))
+                player.OnHurt(damage);
             ObjectPool.Instance.PushObject(gameObject);
         }
     }

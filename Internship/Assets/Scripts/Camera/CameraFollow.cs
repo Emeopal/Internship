@@ -14,10 +14,15 @@ public class CameraFollow : MonoBehaviour
     public float speed = 3;
     public Toggle follow;
 
-    private void FixedUpdate()
+    public GameManager gameManager;
+
+    private void Update()
     {
         if (!follow.isOn)
+        {
+            transform.position = gameManager.levels[gameManager.currentLevel - 1].cameraSolidPlace.position;
             return;
+        }
         targetPosition = targetPos.position + offset;
         if (transform.position == targetPosition)
         {
@@ -27,6 +32,9 @@ public class CameraFollow : MonoBehaviour
         transform.position = smoothPos;
     }
 
-
+    public void Init()
+    {
+        transform.position = gameManager.levels[gameManager.currentLevel - 1].cameraSolidPlace.position;
+    }
 
 }

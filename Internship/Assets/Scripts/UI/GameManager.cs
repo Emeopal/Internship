@@ -6,6 +6,12 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public List<Level> levels = new List<Level>();
-    public int scoreSum;
-    public int currentLevel = 1;
+    public int currentLevel;
+    public int currentMaxLevel;
+    public int maxLevel;
+
+    public void Awake()
+    {
+        maxLevel = levels.Count;
+    }
 }

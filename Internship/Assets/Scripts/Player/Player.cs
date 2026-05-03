@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
 
     public float horizontalNum;
     public float verticalNum;
+    public float coolHurtTime = .5f;
 
     [Header("组件")]
     public Rigidbody playerRB;
@@ -39,13 +40,18 @@ public class Player : MonoBehaviour
     [Header("子类组件")]
     public PlayerDown playerDown;
     public PlayerUp playerUp;
+    public Transform safePlace;
 
     [Header("子类物体")]
     public GameObject normalWeapon;
     public GameObject doubleWeapon;
+    public GameObject laserWeapon;
+    public GameObject soundWaveWeapon;
 
     public Vector3 dir;
     public Vector3 speedDir;
+    public Vector3 initRotation;
+    public Coroutine coolHurtTimer;
     public int Life
     {
         get
@@ -86,9 +92,15 @@ public class Player : MonoBehaviour
 
         weapons.Add(weapon.normalWeapon, new NormalWeapon());
         weapons.Add(weapon.doubleWeapon, new DoubleWeapon());
+        weapons.Add(weapon.laserWeapon, new LaserWeapon());
+        weapons.Add(weapon.soundWaveWeapon, new SoundWaveWeapon());
 
         GameWeapons.Add(weapon.normalWeapon, normalWeapon);
         GameWeapons.Add(weapon.doubleWeapon, doubleWeapon);
+        GameWeapons.Add(weapon.laserWeapon, laserWeapon);
+        GameWeapons.Add(weapon.soundWaveWeapon, soundWaveWeapon);
+
+        initRotation = transform.localEulerAngles;
 
         Init();
     }
@@ -111,9 +123,32 @@ public class Player : MonoBehaviour
         Transition(state.live);
         TransWeapon(weapon.normalWeapon);
 
+        transform.localEulerAngles = initRotation;
+
+        playerUp.Init();
+        playerDown.Init();
+
         currentReboundCount = initReboundCount;
         buffs[buff.shield].StopBuff();
         buffs[buff.speed].StopBuff();
+    }
+
+    public void ToSafePlace()
+    {
+        transform.position = safePlace.position;
+        this.enabled = false;
+    }
+
+    public void OnHurt(int damage)
+    {
+        canBeHurt = false;
+        coolHurtTimer = StartCoroutine(CoolHurt());
+    }
+
+    IEnumerator CoolHurt()
+    {
+        yield return new WaitForSeconds(coolHurtTime);
+        canBeHurt = true;
     }
 
 
@@ -129,9 +164,13 @@ public class Player : MonoBehaviour
     public void TransWeapon(weapon newWeapon)
     {
         if (currentGameWeapon != null)
+        {
             currentGameWeapon.SetActive(false);
+            GameWeapons[newWeapon].transform.rotation = currentGameWeapon.transform.rotation;
+        }
         currentWeapon = weapons[newWeapon];
         currentGameWeapon = GameWeapons[newWeapon];
         currentGameWeapon.SetActive(true);
+        playerUp = currentGameWeapon.GetComponent<PlayerUp>();
     }
 }
