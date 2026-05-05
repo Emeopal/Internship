@@ -16,6 +16,11 @@ public class UI : MonoBehaviour
     public Player player;
     public CameraFollow cameraFollow;
 
+    public void GameFail()
+    {
+        failureMenu.SetActive(true);
+    }
+
     #region 按钮区域
 
     public void PassToSelectMenu()
@@ -56,6 +61,7 @@ public class UI : MonoBehaviour
     
     public void StartGame()
     {
+        gameManager.LoadData();
         mainMenu.SetActive(false);
         selectMenu.SetActive(true);
     }
@@ -73,6 +79,11 @@ public class UI : MonoBehaviour
             settings.SetActive(true);
         }
         settings.SetActive(true);
+    }
+
+    public void EnablePause()
+    {
+        pauseMenu.SetActive(true);
     }
 
     //选关区域
@@ -120,5 +131,12 @@ public class UI : MonoBehaviour
         selectMenu.SetActive(false);
         mainMenu.SetActive(true);
     }
+
+    public void PauseBackToGame()
+    {
+        pauseMenu.SetActive(false);
+        settings.SetActive(false);
+    }
     #endregion
+
 }

@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 
 public enum state
 {
-    live,dead
+    live,dead,
+    patrol,chase,
 };
 
 public enum buff {
@@ -41,6 +40,7 @@ public class Player : MonoBehaviour
     public PlayerDown playerDown;
     public PlayerUp playerUp;
     public Transform safePlace;
+    public HP m_hp;
 
     [Header("子类物体")]
     public GameObject normalWeapon;
@@ -60,11 +60,12 @@ public class Player : MonoBehaviour
         }
         set
         {
-            life = value;
-            if (life <= 0)
+            if (value <= 0)
             {
+                life = 0;
                 Transition(state.dead);
             }
+            life = value;
         }
 
     }
@@ -121,16 +122,19 @@ public class Player : MonoBehaviour
         canBeHurt = true;
 
         Transition(state.live);
-        TransWeapon(weapon.normalWeapon);
+        TransWeapon(weapon.soundWaveWeapon);
 
         transform.localEulerAngles = initRotation;
 
+        playerUp.enabled = true;
+        playerDown.enabled = true;
         playerUp.Init();
         playerDown.Init();
 
         currentReboundCount = initReboundCount;
         buffs[buff.shield].StopBuff();
         buffs[buff.speed].StopBuff();
+        m_hp.ShowHealthBar();
     }
 
     public void ToSafePlace()
@@ -141,7 +145,9 @@ public class Player : MonoBehaviour
 
     public void OnHurt(int damage)
     {
+        Life -= damage;
         canBeHurt = false;
+        m_hp.ShowHealthBar();
         coolHurtTimer = StartCoroutine(CoolHurt());
     }
 

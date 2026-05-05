@@ -10,16 +10,29 @@ public class NormalWeapon : Weapon
     {
 
     }
-    public void Shoot(Transform Up,Transform shootPos,GameObject bullet,string enemy,int times)
+    public void Shoot(Transform Up, Transform shootPos, GameObject bullet, int times)
     {
-        NormalBullet_Player normalBullet_Player;
         temp = ObjectPool.Instance.GetObject(bullet);
-        normalBullet_Player = temp.GetComponent<NormalBullet_Player>();
-        normalBullet_Player.startPos = shootPos;
         temp.transform.rotation = Up.transform.rotation;
-        normalBullet_Player.enemy = enemy;
-        normalBullet_Player.reboundCount = times;
-        temp.GetComponent<Rigidbody>().AddForce(shootPos.forward * fireForce, ForceMode.Impulse);
-        
+
+        NormalBullet_Player playerBullet;
+        if (temp.TryGetComponent<NormalBullet_Player>(out playerBullet))
+        {
+            playerBullet.startPos = shootPos;
+            playerBullet.reboundCount = times;
+            playerBullet.prepareAngel = Up.transform.eulerAngles;
+            playerBullet.SetVelocity(Up.transform.forward * fireForce);
+        }
+        else
+        {
+            NormalBullet_Enemy enemyBullet = temp.GetComponent<NormalBullet_Enemy>();
+            if (enemyBullet != null)
+            {
+                enemyBullet.startPos = shootPos;
+                enemyBullet.reboundCount = times;
+                enemyBullet.prepareAngel = Up.transform.eulerAngles;
+                enemyBullet.SetVelocity(Up.transform.forward * fireForce);
+            }
+        }
     }
 }

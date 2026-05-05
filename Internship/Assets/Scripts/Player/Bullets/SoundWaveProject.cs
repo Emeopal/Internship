@@ -14,10 +14,6 @@ public class SoundWaveProject : MonoBehaviour
     public float startAlpha = 1f;
     public float endAlpha = 0.2f;
 
-    [Header("’Û”™…Ë÷√")]
-    public string ownerTag = "Player";
-    public string[] targetTags = new string[] { "Enemy" };
-
     private Vector3 direction;
     private float startTime;
     private MeshFilter meshFilter;
@@ -25,13 +21,11 @@ public class SoundWaveProject : MonoBehaviour
     private SphereCollider sphereCollider;
     private Material soundWaveMat;
 
-    public void Initialize(Vector3 position, Vector3 dir, string _ownerTag, string[] _targetTags)
+    public void Initialize(Vector3 position, Vector3 dir)
     {
         transform.position = position;
         direction = dir.normalized;
         startTime = Time.time;
-        ownerTag = _ownerTag;
-        targetTags = _targetTags;
 
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
@@ -60,7 +54,11 @@ public class SoundWaveProject : MonoBehaviour
 
     void Update()
     {
-        transform.position += direction * speed * Time.deltaTime;
+        Vector3 moveDir = direction;
+        moveDir.y = 0;
+        moveDir.Normalize();
+
+        transform.position += moveDir * speed * Time.deltaTime;
 
         float elapsed = Time.time - startTime;
         float currentRadius = Mathf.Lerp(0.1f, maxRadius, elapsed / lifetime);
@@ -120,15 +118,13 @@ public class SoundWaveProject : MonoBehaviour
     bool IsValidTarget(GameObject obj)
     {
         if (obj == null) return false;
-        if (obj.CompareTag(ownerTag)) return false;
+        if (obj.CompareTag("Player")) return false;
 
-        foreach (string tag in targetTags)
+        if (obj.CompareTag("Enemy"))
         {
-            if (obj.CompareTag(tag))
-            {
-                return true;
-            }
+            return true;
         }
+        
         return false;
     }
 
@@ -144,9 +140,6 @@ public class SoundWaveProject : MonoBehaviour
                 FSM enemyFSM;
                 if (other.TryGetComponent<FSM>(out enemyFSM))
                     enemyFSM.OnHurt(damage);
-                Player player;
-                if (other.TryGetComponent<Player>(out player))
-                    player.OnHurt(damage);
             }
         }
     }

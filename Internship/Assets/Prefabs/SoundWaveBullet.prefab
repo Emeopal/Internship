@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 9.52904, y: -1.6044787, z: 15.450105}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -47,12 +47,9 @@ MonoBehaviour:
   speed: 20
   lifetime: 1
   damage: 3
-  maxRadius: 10
-  fanAngle: 30
+  maxRadius: 50
+  fanAngle: 90
   meshSegments: 20
-  visualScale: 10
+  visualScale: 1
   startAlpha: 1
   endAlpha: 0.2
-  ownerTag: Player
-  targetTags:
-  - Enemy

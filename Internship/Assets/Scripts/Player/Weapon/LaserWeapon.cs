@@ -11,8 +11,8 @@ public class LaserWeapon : Weapon
     int damage = 3;
     public void Shoot(LineRenderer laser,Transform shootPos,Transform playerUp,LayerMask targetLayer, LayerMask enemy )
     {
-        //ÉËº¦Ð§¹û
-        RaycastHit[] hits = Physics.RaycastAll(shootPos.position,playerUp.forward, 30, enemy);
+        //ä¼¤å®³æ•ˆæžœ
+        RaycastHit[] hits = Physics.RaycastAll(shootPos.position,playerUp.forward, 30);
 
         if (hits.Length > 0)
         {
@@ -22,25 +22,29 @@ public class LaserWeapon : Weapon
             }
         }
 
-        //ÊÓ¾õÐ§¹û
+        //ï¿½Ó¾ï¿½Ð§ï¿½ï¿½
         RaycastHit hitInfo;
         bool isHit = Physics.Raycast(shootPos.position , playerUp.forward, out hitInfo, 30, targetLayer);
         if (isHit)
         {
-            Vector3 hitPoint = hitInfo.point;      // »÷ÖÐµã×ø±ê
+            hitPoint = hitInfo.point;      // ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½
         }
         else
         {
-            // Î´»÷ÖÐ - ÖÕµãÎª×î´ó¾àÀë´¦
+            // Î´ï¿½ï¿½ï¿½ï¿½ - ï¿½Õµï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ë´¦
             hitPoint = shootPos.position + playerUp.forward * 30;
         }
         if (laser == null) return;
 
-        // ÉèÖÃ¼¤¹âÏßÁ½¸ö¶Ëµã£ºÆðµãºÍÖÕµã
+        // ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµã£ºï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½
         laser.enabled = true;
         laser.SetPosition(0, shootPos.position);
         laser.SetPosition(1, hitPoint);
-        playerUp.GetComponent<PlayerUp>().StartCoroutine(LaserTimer(laser));
+        MonoBehaviour mono = playerUp.GetComponent<MonoBehaviour>();
+        if (mono != null)
+        {
+            mono.StartCoroutine(LaserTimer(laser));
+        }
     }
     IEnumerator LaserTimer(LineRenderer laser)
     {
@@ -55,6 +59,12 @@ public class LaserWeapon : Weapon
         if (target.TryGetComponent<FSM>(out temp))
         {
             temp.OnHurt(damage);
+        }
+
+        Player player;
+        if (target.TryGetComponent<Player>(out player))
+        {
+            player.OnHurt(damage);
         }
     }
 }

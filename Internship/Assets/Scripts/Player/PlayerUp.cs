@@ -15,13 +15,13 @@ public class PlayerUp : MonoBehaviour
     public Transform shootPos_2;
     public Transform soundWaveShootPos;
 
-    //³õÊ¼»¯ÓÃ
     public Vector3 initRotation;
     public Vector3 initPosition;
 
     public PlayerDown playerDown;
-    public LayerMask targetLayer;
+    public LayerMask wall;
     public LayerMask enemy;
+    public LayerMask groundLayer;
 
     public float shootCoolTime = 0.5f;
     public float force = 0.5f;
@@ -42,12 +42,16 @@ public class PlayerUp : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && canShoot)
         {
+            if (originPos != null)
+            {
+                transform.localPosition = originPos;
+            }
             StartCoroutine(coolShoot());
             RotateToMouse();
-            player.currentWeapon.Shoot(transform,shootPos,bullet,"Enemy",player.currentReboundCount);
+            player.currentWeapon.Shoot(transform,shootPos,bullet,player.currentReboundCount);
             player.currentWeapon.Shoot(transform, shootPos_1, shootPos_2, bullet,"Enemy",player.currentReboundCount);
-            player.currentWeapon.Shoot(laser, laserShootPos, transform,targetLayer,enemy);
-            player.currentWeapon.Shoot(soundWaveShootPos, transform, soundWaveBullet,"Player",targets);
+            player.currentWeapon.Shoot(laser, laserShootPos, transform,wall,enemy);
+            player.currentWeapon.Shoot(soundWaveShootPos, transform, soundWaveBullet);
             Offset(transform.forward);
         }
     }
@@ -81,7 +85,12 @@ public class PlayerUp : MonoBehaviour
         transform.localPosition = initPosition;
     }
 
-    #region ×ªÏòÏà¹Ø
+    private void OnDisable()
+    {
+        canShoot = true;
+    }
+
+    #region ×ªï¿½ï¿½ï¿½ï¿½ï¿½
     void RotateToMouse()
     {
         Vector3 mousePosition = GetMouseWorldPosition();
@@ -103,7 +112,7 @@ public class PlayerUp : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, groundLayer))
         {
             return hit.point;
         }

@@ -9,7 +9,7 @@ public enum weapon {
 
 public interface Weapon 
 {
-    public void Shoot(Transform Up, Transform shootPos, GameObject bullet,string enemy,int times)
+    public void Shoot(Transform Up, Transform shootPos, GameObject bullet,int times)
     {
 
     }
@@ -23,7 +23,7 @@ public interface Weapon
     {
 
     }
-    public void Shoot(Transform shootPos, Transform playerUp, GameObject soundWavePrefab, string owner, string[] targets)
+    public void Shoot(Transform shootPos, Transform playerUp, GameObject soundWavePrefab)
     {
 
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Level : MonoBehaviour
 {
@@ -27,7 +28,10 @@ public class Level : MonoBehaviour
 
     public float timer;
     public int Score;
+    public bool isPassed;
     public Coroutine countTime;
+
+    public GameObject Title;
 
     private int enemyCount = 0;
     public int EnemyCount
@@ -41,6 +45,7 @@ public class Level : MonoBehaviour
             enemyCount = value;
             if (enemyCount <= 0)
             {
+                isPassed = true;
                 StartCoroutine(Pass());
             }
         }
@@ -90,7 +95,21 @@ public class Level : MonoBehaviour
             enemyCount += 1;
         }
         timer = 0;
+        isPassed = false;
         countTime = StartCoroutine(CountTime());
+        LevelOn();
+    }
+
+    public void LevelOn()
+    {
+        Title.SetActive(true);
+        StartCoroutine(WaitSomeTime());
+    }
+
+    IEnumerator WaitSomeTime()
+    {
+        yield return new WaitForSeconds(1.5f);
+        Title.SetActive(false);
     }
 
     IEnumerator CountTime()

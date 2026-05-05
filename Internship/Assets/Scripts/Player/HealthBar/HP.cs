@@ -11,12 +11,16 @@ public class HP : MonoBehaviour
 
     public float percentage;
     public float speed = .003f;
+    public float fadeSpeed = 3f;
 
     public Image HealthBar;
+    public Image backGround;
 
     Color healthyColor = Color.green;   
     Color midColor = Color.yellow;      
     Color lowColor = Color.red;
+
+    private Coroutine currentFadeCoroutine;
 
     void Update()
     {
@@ -57,6 +61,41 @@ public class HP : MonoBehaviour
             return;
         }
         HealthBar.color = healthyColor;
+    }
+    public void ShowHealthBar()
+    {
+        if (currentFadeCoroutine != null)
+            StopCoroutine(currentFadeCoroutine);
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+        CanvasGroup back = backGround.GetComponent<CanvasGroup>();
+        canvasGroup.alpha = 1;
+        back.alpha = 1;
+
+        if (gameObject.activeInHierarchy)  
+            HideHealthBar();
+    }
+
+    public void HideHealthBar()
+    {
+        if (!gameObject.activeInHierarchy)  
+            return;
+        currentFadeCoroutine = StartCoroutine(FadeOut());
+    }
+
+    IEnumerator FadeOut()
+    {
+        yield return new WaitForSeconds(1.5f);
+        CanvasGroup canvasGroup = GetComponent<CanvasGroup>();
+        CanvasGroup back = backGround.GetComponent<CanvasGroup>();
+
+        while (canvasGroup.alpha > 0)
+        {
+            canvasGroup.alpha -= Time.deltaTime * fadeSpeed;
+            back.alpha -= Time.deltaTime * fadeSpeed;
+            yield return null;
+        }
+        canvasGroup.alpha = 0;
+        back.alpha = 0;
     }
 
 }
