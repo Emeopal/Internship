@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using static UnityEngine.UI.Image;
 
@@ -16,27 +15,29 @@ public class LaserWeapon : Weapon
 
         if (hits.Length > 0)
         {
-            foreach(RaycastHit hit in hits)
+            Transform temp = null;
+            for (int i = 0; i < hits.Length; i++)
             {
-                TryDealDamage(hit.collider.gameObject);
+                if (hits[i].collider.gameObject.CompareTag("Wall"))
+                {
+                    temp = hits[i].transform;
+                }
+                TryDealDamage(hits[i].collider.gameObject,temp,shootPos);
             }
         }
 
-        //�Ӿ�Ч��
         RaycastHit hitInfo;
         bool isHit = Physics.Raycast(shootPos.position , playerUp.forward, out hitInfo, 30, targetLayer);
         if (isHit)
         {
-            hitPoint = hitInfo.point;      // ���е�����
+            hitPoint = hitInfo.point;     
         }
         else
         {
-            // δ���� - �յ�Ϊ�����봦
             hitPoint = shootPos.position + playerUp.forward * 30;
         }
         if (laser == null) return;
 
-        // ���ü����������˵㣺�����յ�
         laser.enabled = true;
         laser.SetPosition(0, shootPos.position);
         laser.SetPosition(1, hitPoint);
@@ -51,20 +52,23 @@ public class LaserWeapon : Weapon
         yield return new WaitForSeconds(.15f);
         laser.enabled = false;
     }
-    private void TryDealDamage(GameObject target)
+    private void TryDealDamage(GameObject target,Transform temp,Transform shootPos)
     {
         if (target == null) return ;
-
-        FSM temp;
-        if (target.TryGetComponent<FSM>(out temp))
+        FSM fsm;
+        if (target.TryGetComponent<FSM>(out fsm))
         {
-            temp.OnHurt(damage);
+            if(temp!=null && Vector3.Distance(shootPos.position,target.transform.position)<
+                Vector3.Distance(shootPos.position, temp.transform.position))
+            fsm.OnHurt(damage);
         }
 
         Player player;
         if (target.TryGetComponent<Player>(out player))
         {
-            player.OnHurt(damage);
+            if (temp != null && Vector3.Distance(shootPos.position, target.transform.position) <
+                Vector3.Distance(shootPos.position, temp.transform.position))
+                player.OnHurt(damage);
         }
     }
 }

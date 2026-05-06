@@ -40,7 +40,7 @@ public class PlayerUp : MonoBehaviour
     }
     public void Shoot()
     {
-        if (Input.GetMouseButtonDown(0) && canShoot)
+        if (Input.GetMouseButtonDown(0) && canShoot )
         {
             if (originPos != null)
             {
@@ -90,7 +90,7 @@ public class PlayerUp : MonoBehaviour
         canShoot = true;
     }
 
-    #region ת�����
+    #region 
     void RotateToMouse()
     {
         Vector3 mousePosition = GetMouseWorldPosition();

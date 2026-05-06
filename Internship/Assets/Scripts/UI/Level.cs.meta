@@ -10,12 +10,17 @@ MonoImporter:
   - doubleEnemy: {fileID: 5177712932434158912, guid: 58860746ba990bb4ebcb77c2766e08a5, type: 3}
   - laserEnemy: {fileID: 4215621708491368729, guid: eee7fca8dbe99d84ab3dc015f7ba22db, type: 3}
   - soundWaveEnemy: {fileID: 6138418353130834401, guid: ef50066c2a485084f9fd84aebcccf675, type: 3}
+  - shield: {fileID: 4765384056869177886, guid: d02b7563c6a8bc3499f4b838aff388b5, type: 3}
+  - speed: {fileID: 6601819475794045004, guid: 1df2bdbcb1720074db0c704ec85c233c, type: 3}
+  - rebound: {fileID: 4870093142246427201, guid: 157caf86d8e183847a2dbf4aa50f23f2, type: 3}
+  - doubleW: {fileID: 9154285291928422348, guid: 973578963bbd94743a719876c5b5f663, type: 3}
+  - laserW: {fileID: 2201292599654399083, guid: 7cc97164d1b21534a9144225c0378b90, type: 3}
+  - soundWaveW: {fileID: 44891760249634352, guid: 9d7123ef7efd96e47a0e586c9f44f3ee, type: 3}
   - birthPlace: {instanceID: 0}
   - cameraSolidPlace: {instanceID: 0}
-  - upper: {instanceID: 0}
-  - lower: {instanceID: 0}
   - left: {instanceID: 0}
   - right: {instanceID: 0}
+  - Title: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

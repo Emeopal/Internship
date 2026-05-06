@@ -8,7 +8,7 @@ public class EnemyPatrol : Istate
     private float patrolWaitTime = 2f;
     private float waitTimer = 0f;
     private bool isWaiting = false;
-    public float upperBodyRotateSpeed = 5;
+    public float upperBodyRotateSpeed = 30;  // 增加旋转速度
 
     public EnemyPatrol(FSM enemyState)
     {
@@ -20,6 +20,7 @@ public class EnemyPatrol : Istate
         isWaiting = false;
         waitTimer = 0f;
         fsm.SetNewPatrolTarget();
+        Debug.Log(fsm.targetPosition);
     }
 
     public void OnUpdate()
@@ -30,11 +31,14 @@ public class EnemyPatrol : Istate
 
             if (canSeePlayer)
             {
+                FacePlayer();
                 fsm.Transition(state.chase);
+                return;
             }
         }
 
-        if (fsm.enemyUp != null)
+        // 巡逻时：上半身随机旋转搜索，下半身朝巡逻目标移动
+        if (!isWaiting && fsm.enemyUp != null)
         {
             fsm.enemyUp.transform.Rotate(0, upperBodyRotateSpeed * Time.deltaTime, 0);
         }
@@ -56,6 +60,20 @@ public class EnemyPatrol : Istate
         {
             isWaiting = true;
             waitTimer = patrolWaitTime;
+        }
+    }
+    
+    void FacePlayer()
+    {
+        if (fsm.enemyUp != null && fsm.player != null)
+        {
+            Vector3 toPlayer = fsm.player.position - fsm.enemyUp.transform.position;
+            toPlayer.y = 0;
+            if (toPlayer != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(toPlayer);
+                fsm.enemyUp.transform.rotation = targetRotation;
+            }
         }
     }
 
@@ -104,6 +122,9 @@ public class EnemyChase : Istate
             return;
         }
 
+        // 持续朝向玩家（关键修改）
+        FacePlayer();
+
         if (fsm.vision != null)
         {
             bool canSeePlayer = fsm.vision.IsInSight(fsm.player);
@@ -125,6 +146,24 @@ public class EnemyChase : Istate
         }
     }
 
+    void FacePlayer()
+    {
+        if (enemyUp != null && fsm.player != null)
+        {
+            Vector3 toPlayer = fsm.player.position - enemyUp.transform.position;
+            toPlayer.y = 0;
+            if (toPlayer != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(toPlayer);
+                // 平滑旋转
+                enemyUp.transform.rotation = Quaternion.Slerp(
+                    enemyUp.transform.rotation,
+                    targetRotation,
+                    Time.deltaTime * 8f
+                );
+            }
+        }
+    }
     void ChasePlayer()
     {
         if (fsm.player == null)
@@ -141,17 +180,7 @@ public class EnemyChase : Istate
             fsm.transform.position += direction * chaseSpeed * Time.deltaTime;
         }
 
-        if (enemyUp != null && fsm.player != null)
-        {
-            Vector3 toPlayer = fsm.player.position - enemyUp.transform.position;
-            toPlayer.y = 0;
-            if (toPlayer != Vector3.zero)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(toPlayer);
-                enemyUp.transform.rotation = targetRotation;
-            }
-        }
-
+        // 下半身朝向移动方向
         if (fsm.enemyDown != null && direction != Vector3.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(direction);

@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public int currentLevel;
     public int currentMaxLevel;
     public int maxLevel;
+    public Player player;
 
     public void Awake()
     {
@@ -32,10 +33,12 @@ public class GameManager : MonoBehaviour
         else
             file = File.OpenWrite(FilePath);
 
-            string json = JsonUtility.ToJson(currentMaxLevel, true);
+        MyInt myInt = new MyInt();
+        myInt.temp = currentMaxLevel;
+        string json = JsonUtility.ToJson(myInt, true);
 
         binaryFormatter.Serialize(file, json);
-        
+
         file.Close();
     }
 
@@ -54,13 +57,18 @@ public class GameManager : MonoBehaviour
             //打开文件
             FileStream file = File.Open(Application.persistentDataPath + "/Game_SaveData/Data.txt", FileMode.Open);
 
-            int temp = 1;
+            MyInt myInt = new MyInt();
 
-            JsonUtility.FromJsonOverwrite((string)binaryFormatter.Deserialize(file), temp);
+            JsonUtility.FromJsonOverwrite((string)binaryFormatter.Deserialize(file), myInt);
 
-            currentMaxLevel = currentMaxLevel > temp ? currentMaxLevel : temp;
+
+            currentMaxLevel = currentMaxLevel > myInt.temp ? currentMaxLevel : myInt.temp;
             //关闭文件
             file.Close();
         }
+    }
+
+    public class MyInt{
+        public int temp;
     }
 }

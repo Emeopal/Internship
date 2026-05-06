@@ -18,6 +18,7 @@ public class UI : MonoBehaviour
 
     public void GameFail()
     {
+        gameManager.levels[gameManager.currentLevel - 1].CleanLevel();
         failureMenu.SetActive(true);
     }
 
@@ -25,26 +26,30 @@ public class UI : MonoBehaviour
 
     public void PassToSelectMenu()
     {
+        gameManager.levels[gameManager.currentLevel - 1].CleanLevel();
         passMenu.SetActive(false);
         selectMenu.SetActive(true);
-        player.ToSafePlace();
+        player.ToSafe();
     }
 
     public void FailureToSelectMenu()
     {
+        gameManager.levels[gameManager.currentLevel - 1].CleanLevel();
         failureMenu.SetActive(false);
         selectMenu.SetActive(true);
-        player.ToSafePlace();
+        player.ToSafe();
     }
 
     public void NextLevel()
     {
+        gameManager.levels[gameManager.currentLevel - 1].CleanLevel();
         if (gameManager.currentLevel < gameManager.maxLevel)
         {
             gameManager.currentLevel += 1;
             player.Init();
             cameraFollow.Init();
             gameManager.levels[gameManager.currentLevel - 1].Init();
+            passMenu.SetActive(false);
         }
         else
         {
@@ -52,23 +57,49 @@ public class UI : MonoBehaviour
         }
     }
 
-    public void RestartGame()
+    public void PauseToSelect()
     {
+        pauseMenu.SetActive(false);
+        gameManager.levels[gameManager.currentLevel - 1].CleanLevel();
+        selectMenu.SetActive(true);
+    }
+
+    public void PauseRestartGame()
+    {
+        pauseMenu.SetActive(false);
+        gameManager.levels[gameManager.currentLevel - 1].CleanLevel();
         player.Init();
         cameraFollow.Init();
         gameManager.levels[gameManager.currentLevel - 1].Init();
     }
+
+    public void RestartGame()
+    {
+        gameManager.levels[gameManager.currentLevel - 1].CleanLevel();
+        player.Init();
+        cameraFollow.Init();
+        gameManager.levels[gameManager.currentLevel - 1].Init();
+        if(passMenu.activeSelf == true)
+        {
+            passMenu.SetActive(false);
+        }
+        if(failureMenu.activeSelf == true)
+        {
+            failureMenu.SetActive(false);
+        }
+    }
     
     public void StartGame()
     {
-        gameManager.LoadData();
         mainMenu.SetActive(false);
+        gameManager.LoadData();
         selectMenu.SetActive(true);
     }
 
     public void ExitGame()
     {
         Application.Quit();
+        gameManager.SaveData();
     }
 
     public void OprateSettings()
@@ -90,10 +121,11 @@ public class UI : MonoBehaviour
 
     public void SharedPart()
     {
-        player.Init();
-        cameraFollow.Init();
-        gameManager.levels[gameManager.currentLevel - 1].Init();
         player.enabled = true;
+        gameManager.levels[gameManager.currentLevel - 1].Init();  
+        player.Init();                                           
+        cameraFollow.Init();
+        selectMenu.SetActive(false);
     }
     public void Level_1()
     {

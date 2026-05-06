@@ -16,7 +16,6 @@ public class PlayerDead : Istate
     {
         player.playerDown.enabled = false;
         player.playerUp.enabled = false;
-        Time.timeScale = 0;
         if (gameManager.levels[gameManager.currentLevel-1].isPassed!=true)
         {
             playerFail = player.StartCoroutine(WaitFail());
@@ -45,6 +44,5 @@ public class PlayerDead : Istate
     {
         player.playerDown.enabled = true;
         player.playerUp.enabled = true;
-        Time.timeScale = 1;
     }
 }

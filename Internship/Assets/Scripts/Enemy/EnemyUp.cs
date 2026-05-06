@@ -28,20 +28,25 @@ public class EnemyUp : MonoBehaviour
     public Vector3 originPos;
 
     public bool canShoot = true;
+
     public void Awake()
     {
-        initPosition = transform.localEulerAngles;
+        initRotation = transform.localEulerAngles;  // 修正：原来是 initPosition
         initPosition = transform.localPosition;
     }
+
     void Start()
     {
-        
+
     }
 
     public void Shoot()
     {
         if (canShoot)
         {
+            // 添加：射击前强制朝向玩家
+            FaceTarget();
+
             if (originPos != null)
             {
                 transform.localPosition = originPos;
@@ -66,6 +71,23 @@ public class EnemyUp : MonoBehaviour
             Offset(transform.forward);
         }
     }
+
+    // 新增：让 enemyUp 朝向目标（玩家）
+    void FaceTarget()
+    {
+        if (fsm != null && fsm.player != null)
+        {
+            Vector3 toTarget = fsm.player.position - transform.position;
+            toTarget.y = 0;  // 保持水平方向
+
+            if (toTarget != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(toTarget);
+                transform.rotation = targetRotation;
+            }
+        }
+    }
+
     IEnumerator coolShoot()
     {
         canShoot = false;

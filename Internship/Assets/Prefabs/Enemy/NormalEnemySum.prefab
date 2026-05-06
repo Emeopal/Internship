@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6b3ec2a3efd060f4995ab96d5911dba4, type: 2}
+  - {fileID: 2100000, guid: d35ea154e960bef4d8c86910e3dba2ce, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -492,7 +492,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6b3ec2a3efd060f4995ab96d5911dba4, type: 2}
+  - {fileID: 2100000, guid: d35ea154e960bef4d8c86910e3dba2ce, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -765,8 +765,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 6.1847534, y: 4.4085627, z: 11.546982}
-  m_Center: {x: 0.17044067, y: 0.36100626, z: 0.07003021}
+  m_Size: {x: 6.1847534, y: 4.141318, z: 11.546982}
+  m_Center: {x: 0.17044067, y: 0.49462867, z: 0.07003021}
 --- !u!114 &4057117410368857401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -790,6 +790,7 @@ MonoBehaviour:
   enemyDown: {fileID: 2573961897903504630}
   m_hp: {fileID: 5547327333109687162}
   player: {fileID: 0}
+  corpse: {fileID: 919132149155446097, guid: b6376c856ecd432479a13408cfb66bfa, type: 3}
   m_weapon: 0
 --- !u!114 &3800623820587682785
 MonoBehaviour:
@@ -1058,7 +1059,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6b3ec2a3efd060f4995ab96d5911dba4, type: 2}
+  - {fileID: 2100000, guid: d35ea154e960bef4d8c86910e3dba2ce, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

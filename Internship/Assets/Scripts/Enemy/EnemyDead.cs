@@ -17,7 +17,7 @@ public class EnemyDead : Istate
     {
         Debug.Log("½øÈëËÀÍö");
 
-        //gameManager.levels[gameManager.currentLevel-1].EnemyCount -= 1;
+        gameManager.levels[gameManager.currentLevel-1].EnemyCount -= 1;
         GameObject temp;
         temp=ObjectPool.Instance.GetObject(fsm.corpse);
         temp.transform.position = new Vector3(fsm.transform.position.x, 2, fsm.transform.position.z);

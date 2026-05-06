@@ -1161,8 +1161,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.0000001, y: 2, z: 1.0000002}
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000020861626}
+  m_Size: {x: 0.8744182, y: 2, z: 1.0000002}
+  m_Center: {x: 0.0058159684, y: 0, z: -0.00000020418844}
 --- !u!1 &5024329312341426676
 GameObject:
   m_ObjectHideFlags: 0
@@ -1349,8 +1349,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2, z: 1.0000001}
-  m_Center: {x: 0.00000005960464, y: 0, z: 0.00000002980233}
+  m_Size: {x: 0.8744182, y: 2, z: 1.0000001}
+  m_Center: {x: 0.00000005960464, y: 0, z: -0.0000002041884}
 --- !u!1 &5901719114881360829
 GameObject:
   m_ObjectHideFlags: 0
@@ -2236,6 +2236,7 @@ MonoBehaviour:
   dir: {x: 0, y: 0, z: 0}
   speedDir: {x: 0, y: 0, z: 0}
   initRotation: {x: 0, y: 0, z: 0}
+  gameManager: {fileID: 0}
   m_state: 0
   currentGameWeapon: {fileID: 0}
 --- !u!54 &1577904696074551350
@@ -2263,7 +2264,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 84
+  m_Constraints: 80
   m_CollisionDetection: 2
 --- !u!65 &3482330039459530106
 BoxCollider:

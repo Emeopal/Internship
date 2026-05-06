@@ -51,7 +51,9 @@ public class Player : MonoBehaviour
     public Vector3 dir;
     public Vector3 speedDir;
     public Vector3 initRotation;
+
     public Coroutine coolHurtTimer;
+    public GameManager gameManager;
     public int Life
     {
         get
@@ -122,9 +124,10 @@ public class Player : MonoBehaviour
         canBeHurt = true;
 
         Transition(state.live);
-        TransWeapon(weapon.soundWaveWeapon);
+        TransWeapon(weapon.normalWeapon);
 
         transform.localEulerAngles = initRotation;
+        transform.position = gameManager.levels[gameManager.currentLevel - 1].birthPlace.position;
 
         playerUp.enabled = true;
         playerDown.enabled = true;
@@ -137,7 +140,7 @@ public class Player : MonoBehaviour
         m_hp.ShowHealthBar();
     }
 
-    public void ToSafePlace()
+    public void ToSafe()
     {
         transform.position = safePlace.position;
         this.enabled = false;
@@ -145,10 +148,13 @@ public class Player : MonoBehaviour
 
     public void OnHurt(int damage)
     {
-        Life -= damage;
-        canBeHurt = false;
-        m_hp.ShowHealthBar();
-        coolHurtTimer = StartCoroutine(CoolHurt());
+        if (canBeHurt)
+        {
+            Life -= damage;
+            canBeHurt = false;
+            m_hp.ShowHealthBar();
+            coolHurtTimer = StartCoroutine(CoolHurt());
+        }
     }
 
     IEnumerator CoolHurt()

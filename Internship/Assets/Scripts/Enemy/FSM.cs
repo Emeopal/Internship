@@ -27,6 +27,7 @@ public class FSM : MonoBehaviour
     public HP_Enemy m_hp;
 
     public Transform player;
+    public Rigidbody rb;
     public GameObject corpse;
 
     public Istate currentState;
@@ -35,7 +36,7 @@ public class FSM : MonoBehaviour
     public Weapon currentWeapon;
     public Dictionary<weapon, Weapon> weapons = new Dictionary<weapon, Weapon>();
 
-    private Vector3 targetPosition;
+    public Vector3 targetPosition;
     private Vector3 originAng;
     private bool hasTarget = false;
 
@@ -53,17 +54,23 @@ public class FSM : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Awake()
     {
-
-        originAng = transform.localEulerAngles;
-        states.Add(state.patrol, new EnemyPatrol(this));
-        states.Add(state.chase, new EnemyChase(this));
-        states.Add(state.dead, new EnemyDead(this));
         weapons.Add(weapon.normalWeapon, new NormalWeapon());
         weapons.Add(weapon.doubleWeapon, new DoubleWeapon());
         weapons.Add(weapon.laserWeapon, new LaserWeapon());
         weapons.Add(weapon.soundWaveWeapon, new SoundWaveWeapon());
+
+        states.Add(state.patrol, new EnemyPatrol(this));
+        states.Add(state.chase, new EnemyChase(this));
+        states.Add(state.dead, new EnemyDead(this));
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void Start()
+    {
+
+        originAng = transform.localEulerAngles;
 
         if (player == null)
         {
@@ -75,7 +82,7 @@ public class FSM : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        Init();
     }
 
     public void Init()
@@ -128,20 +135,26 @@ public class FSM : MonoBehaviour
             return transform.position;
         }
 
-        float minX = Mathf.Min(bottomLeft.position.x, topRight.position.x);
-        float maxX = Mathf.Max(bottomLeft.position.x, topRight.position.x);
-        float minZ = Mathf.Min(bottomLeft.position.z, topRight.position.z);
-        float maxZ = Mathf.Max(bottomLeft.position.z, topRight.position.z);
+        float minX = bottomLeft.localPosition.x;
+        float maxX = topRight.localPosition.x;
+        float minZ = bottomLeft.localPosition.z;
+        float maxZ = topRight.localPosition.z;
 
         float randomX = Random.Range(minX, maxX);
         float randomZ = Random.Range(minZ, maxZ);
-        return new Vector3(randomX, 0, randomZ);
+        return new Vector3(randomX, transform.position.y, randomZ);
     }
 
     public void SetNewPatrolTarget()
     {
-        targetPosition = GetRandomPointInBounds();
-        targetPosition.y = 3;
+        Vector3 newTarget = GetRandomPointInBounds();
+        // 确保目标点和当前位置有一定距离，避免原地踏步
+        if (Vector3.Distance(newTarget, transform.localPosition) < 1f)
+        {
+            // 如果距离太近，重新生成目标点
+            newTarget = GetRandomPointInBounds();
+        }
+        targetPosition = newTarget;
         hasTarget = true;
     }
 
@@ -153,7 +166,7 @@ public class FSM : MonoBehaviour
         if (bottomLeft == null || topRight == null)
             return false;
 
-        Vector3 direction = (targetPosition - transform.position);
+        Vector3 direction = (targetPosition - transform.localPosition);
         direction.y = 0;
         float distance = direction.magnitude;
 

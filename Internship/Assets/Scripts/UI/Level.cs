@@ -11,6 +11,13 @@ public class Level : MonoBehaviour
     public List<Transform> laserPos = new List<Transform>();
     public List<Transform> soundWavePos = new List<Transform>();
 
+    public List<Transform> shieldBuffPos;
+    public List<Transform> speedBuffPos;
+    public List<Transform> reboundBuffPos;
+    public List<Transform> doubleBuffPos;
+    public List<Transform> laserBuffPos;
+    public List<Transform> soundWaveBuffPos;
+
     public GameManager gameManager;
     public GameObject passMenu;
 
@@ -19,10 +26,15 @@ public class Level : MonoBehaviour
     public GameObject laserEnemy;
     public GameObject soundWaveEnemy;
 
+    public GameObject shield;
+    public GameObject speed;
+    public GameObject rebound;
+    public GameObject doubleW;
+    public GameObject laserW;
+    public GameObject soundWaveW;
+
     public Transform birthPlace;
     public Transform cameraSolidPlace;
-    public Transform upper;
-    public Transform lower;
     public Transform left;
     public Transform right;
 
@@ -33,6 +45,7 @@ public class Level : MonoBehaviour
 
     public GameObject Title;
 
+    public List<GameObject> list;
     private int enemyCount = 0;
     public int EnemyCount
     {
@@ -67,37 +80,98 @@ public class Level : MonoBehaviour
     {
         enemyCount = 0;
         GameObject _object;
-        foreach(Transform temp in normalPos)
+        list = new List<GameObject>();
+        foreach (Transform temp in normalPos)
         {
-            _object=ObjectPool.Instance.GetObject(normalEnemy);
-            _object.transform.position = temp.position;
+            _object = ObjectPool.Instance.GetObject(normalEnemy);
+            list.Add(_object);
+            StartCoroutine(TransPos(_object, temp.position));
             enemyCount += 1;
         }
+
+        IEnumerator TransPos(GameObject _object,Vector3 pos)
+        {
+            yield return new WaitForFixedUpdate();
+            _object.transform.position = pos;
+            _object.transform.GetChild(0).transform.localPosition = Vector3.zero;
+        }
+        
 
         foreach (Transform temp in doublePos)
         {
             _object = ObjectPool.Instance.GetObject(doubleEnemy);
-            _object.transform.position = temp.position;
+            list.Add(_object);
+            StartCoroutine(TransPos(_object, temp.position));
             enemyCount += 1;
         }
 
-        foreach (Transform temp in normalPos)
+        foreach (Transform temp in laserPos)
         {
             _object = ObjectPool.Instance.GetObject(laserEnemy);
-            _object.transform.position = temp.position;
+            list.Add(_object);
+            StartCoroutine(TransPos(_object, temp.position));
             enemyCount += 1;
         }
 
-        foreach (Transform temp in normalPos)
+        foreach (Transform temp in soundWavePos)
         {
             _object = ObjectPool.Instance.GetObject(soundWaveEnemy);
-            _object.transform.position = temp.position;
+            list.Add(_object);
+            StartCoroutine(TransPos(_object, temp.position));
             enemyCount += 1;
+        }
+        foreach (Transform temp in shieldBuffPos)
+        {
+            _object = ObjectPool.Instance.GetObject(shield);
+            list.Add(_object);
+            StartCoroutine(TransPos(_object, temp.position));
+        }
+        foreach (Transform temp in speedBuffPos)
+        {
+            _object = ObjectPool.Instance.GetObject(speed);
+            list.Add(_object);
+            StartCoroutine(TransPos(_object, temp.position));
+        }
+        foreach (Transform temp in reboundBuffPos)
+        {
+            _object = ObjectPool.Instance.GetObject(rebound);
+            list.Add(_object);
+            StartCoroutine(TransPos(_object, temp.position));
+        }
+        foreach (Transform temp in doubleBuffPos)
+        {
+            _object = ObjectPool.Instance.GetObject(doubleW);
+            list.Add(_object);
+            StartCoroutine(TransPos(_object, temp.position));
+        }
+        foreach (Transform temp in laserBuffPos)
+        {
+            _object = ObjectPool.Instance.GetObject(laserW);
+            list.Add(_object);
+            StartCoroutine(TransPos(_object, temp.position));
+        }
+        foreach (Transform temp in soundWaveBuffPos)
+        {
+            _object = ObjectPool.Instance.GetObject(soundWaveW);
+            list.Add(_object);
+            StartCoroutine(TransPos(_object, temp.position));
         }
         timer = 0;
         isPassed = false;
         countTime = StartCoroutine(CountTime());
+        StartCoroutine(TransPos(gameManager.player.gameObject,birthPlace.position));
         LevelOn();
+    }
+
+    public void CleanLevel()
+    {
+        if (list != null)
+        {
+            foreach(GameObject temp in list)
+            {
+                ObjectPool.Instance.PushObject(temp);
+            }
+        }
     }
 
     public void LevelOn()

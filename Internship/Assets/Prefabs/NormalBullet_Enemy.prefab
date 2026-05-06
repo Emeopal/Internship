@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 471884017504588124}
   m_Layer: 11
   m_Name: NormalBullet_Enemy
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -102,7 +102,10 @@ MonoBehaviour:
   startPos: {fileID: 0}
   reboundCount: 3
   damage: 1
-  fsm: {fileID: 0}
+  prepareAngel: {x: 0, y: 0, z: 0}
+  originPos: {x: 0, y: 0, z: 0}
+  originRot: {x: 0, y: 0, z: 0}
+  originVel: {x: 0, y: 0, z: 0}
 --- !u!54 &1467048586246444329
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -128,8 +131,8 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 16
-  m_CollisionDetection: 2
+  m_Constraints: 112
+  m_CollisionDetection: 3
 --- !u!65 &471884017504588124
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -137,7 +140,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7193300551779468577}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: e143a4e02f78e90478145f06d70b215b, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 64
@@ -145,7 +148,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

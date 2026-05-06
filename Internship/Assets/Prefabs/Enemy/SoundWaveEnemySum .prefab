@@ -1163,6 +1163,7 @@ MonoBehaviour:
   enemyDown: {fileID: 3454069492519513764}
   m_hp: {fileID: 5351608319356226283}
   player: {fileID: 0}
+  corpse: {fileID: 919132149155446097, guid: b6376c856ecd432479a13408cfb66bfa, type: 3}
   m_weapon: 3
 --- !u!1 &9155022241817921901
 GameObject:

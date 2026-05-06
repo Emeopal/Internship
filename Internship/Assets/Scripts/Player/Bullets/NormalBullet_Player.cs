@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -69,51 +69,50 @@ public class NormalBullet_Player : MonoBehaviour
         bulletRB.velocity = originVel;
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            Rebound(collision);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
             FSM fsm;
-            fsm = other.GetComponent<FSM>();
-            fsm.OnHurt(damage);
+            if (other.gameObject.TryGetComponent<FSM>(out fsm))
+                fsm.OnHurt(damage);
             ObjectPool.Instance.PushObject(gameObject);
             return;
         }
-        if (other.CompareTag("Wall"))
-        {
-            Rebound(other);
-        }
-
     }
-    void Rebound(Collider wall)
+
+    void Rebound(Collision collision)
     {
         if (currentVelocity.magnitude < 0.1f)
             return;
 
-        Vector3 bulletDir = currentVelocity.normalized;
-        Vector3 wallNormal = wall.transform.up;
-
-        if (Mathf.Abs(wallNormal.y) > 0.9f)
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position - bulletDir * 0.5f, bulletDir, out hit, 1f))
-            {
-                wallNormal = hit.normal;
-            }
-        }
-
+        Vector3 wallNormal = collision.contacts[0].normal;
         wallNormal.y = 0;
-        if (wallNormal == Vector3.zero)
-        {
-            wallNormal = -bulletDir;
-        }
+        wallNormal.Normalize();
+
+        Vector3 bulletDir = currentVelocity.normalized;
 
         Vector3 reflectDir = Vector3.Reflect(bulletDir, wallNormal);
         reflectDir.y = 0;
+        reflectDir.Normalize();
 
         currentVelocity = reflectDir * currentVelocity.magnitude;
-        transform.rotation = Quaternion.LookRotation(currentVelocity);
-        transform.localEulerAngles = new Vector3(90, transform.localEulerAngles.y, transform.localEulerAngles.z);
+
+        if (currentVelocity != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(currentVelocity);
+            transform.localEulerAngles = transform.localEulerAngles = 
+                new Vector3(90, transform.localEulerAngles.y, transform.localEulerAngles.z);
+        }
+
         ReboundCount--;
     }
     public void SetVelocity(Vector3 velocity)
