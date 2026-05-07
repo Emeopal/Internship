@@ -10,22 +10,7 @@ public class LaserWeapon : Weapon
     int damage = 3;
     public void Shoot(LineRenderer laser,Transform shootPos,Transform playerUp,LayerMask targetLayer, LayerMask enemy )
     {
-        //伤害效果
-        RaycastHit[] hits = Physics.RaycastAll(shootPos.position,playerUp.forward, 30);
-
-        if (hits.Length > 0)
-        {
-            Transform temp = null;
-            for (int i = 0; i < hits.Length; i++)
-            {
-                if (hits[i].collider.gameObject.CompareTag("Wall"))
-                {
-                    temp = hits[i].transform;
-                }
-                TryDealDamage(hits[i].collider.gameObject,temp,shootPos);
-            }
-        }
-
+        
         RaycastHit hitInfo;
         bool isHit = Physics.Raycast(shootPos.position , playerUp.forward, out hitInfo, 30, targetLayer);
         if (isHit)
@@ -46,6 +31,17 @@ public class LaserWeapon : Weapon
         {
             mono.StartCoroutine(LaserTimer(laser));
         }
+
+        RaycastHit[] hits = Physics.RaycastAll(shootPos.position, playerUp.forward, Vector3.Distance(hitPoint,shootPos.position));
+
+        if (hits.Length > 0)
+        {
+            Transform temp = null;
+            for (int i = 0; i < hits.Length; i++)
+            {
+                TryDealDamage(hits[i].collider.gameObject, temp, shootPos);
+            }
+        }
     }
     IEnumerator LaserTimer(LineRenderer laser)
     {
@@ -58,17 +54,13 @@ public class LaserWeapon : Weapon
         FSM fsm;
         if (target.TryGetComponent<FSM>(out fsm))
         {
-            if(temp!=null && Vector3.Distance(shootPos.position,target.transform.position)<
-                Vector3.Distance(shootPos.position, temp.transform.position))
             fsm.OnHurt(damage);
         }
 
         Player player;
         if (target.TryGetComponent<Player>(out player))
         {
-            if (temp != null && Vector3.Distance(shootPos.position, target.transform.position) <
-                Vector3.Distance(shootPos.position, temp.transform.position))
-                player.OnHurt(damage);
+            player.OnHurt(damage);
         }
     }
 }

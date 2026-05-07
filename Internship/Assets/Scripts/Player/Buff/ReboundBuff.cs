@@ -5,6 +5,11 @@ using UnityEngine;
 public class NewBehaviourScript : MonoBehaviour
 {
     public Player player;
+
+    private void OnEnable()
+    {
+        transform.eulerAngles = Vector3.zero;
+    }
     public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("TankBuff"))

@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8983921364396890216}
   - component: {fileID: 5279686539772018037}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SoundWaveBullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7171730c3a1c2464fb6984af8478364d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
+  speed: 10
   lifetime: 1
   damage: 3
   maxRadius: 50

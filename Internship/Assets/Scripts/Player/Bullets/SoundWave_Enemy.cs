@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 public class SoundWave_Enemy : MonoBehaviour
 {
-    [Header("Éù²¨²ÎÊý")]
     public float speed = 15f;
     public float lifetime = 2f;
     public int damage = 3;
@@ -21,6 +20,15 @@ public class SoundWave_Enemy : MonoBehaviour
     private SphereCollider sphereCollider;
     private Material soundWaveMat;
 
+    private void Awake()
+    {
+        if (sphereCollider == null)
+        {
+            sphereCollider = gameObject.AddComponent<SphereCollider>();
+            sphereCollider.isTrigger = true;
+            sphereCollider.radius = 0.1f;
+        }
+    }
     public void Initialize(Vector3 position, Vector3 dir)
     {
         transform.position = position;
@@ -41,15 +49,10 @@ public class SoundWave_Enemy : MonoBehaviour
             soundWaveMat = new Material(Shader.Find("Unlit/Transparent"));
             meshRenderer.material = soundWaveMat;
         }
-        if (sphereCollider == null)
-        {
-            sphereCollider = gameObject.AddComponent<SphereCollider>();
-            sphereCollider.isTrigger = true;
-        }
 
         Mesh initialMesh = CreateFanMesh(0.1f);
         meshFilter.mesh = initialMesh;
-        sphereCollider.radius = 0.1f;
+
     }
 
     void Update()
@@ -63,16 +66,23 @@ public class SoundWave_Enemy : MonoBehaviour
         float elapsed = Time.time - startTime;
         float currentRadius = Mathf.Lerp(0.1f, maxRadius, elapsed / lifetime);
 
-        Mesh currentMesh = CreateFanMesh(currentRadius);
-        meshFilter.mesh = currentMesh;
-        sphereCollider.radius = currentRadius;
+        if (meshFilter != null)
+        {
+            Mesh currentMesh = CreateFanMesh(currentRadius);
+            meshFilter.mesh = currentMesh;
+        }
+
+        if (sphereCollider != null)
+        {
+            sphereCollider.radius = currentRadius;
+        }
 
         if (elapsed >= lifetime)
         {
             ObjectPool.Instance.PushObject(gameObject);
         }
     }
-    
+
     Mesh CreateFanMesh(float radius)
     {
         Mesh mesh = new Mesh();

@@ -55,5 +55,18 @@ public class ObjectPool
         _Object.SetActive(false);
         objectPool[_name].Enqueue(_Object);
     }
+    public void PushAllObjects()
+    {
+        foreach (Transform child in pool.transform)
+        {
+            foreach (Transform obj in child)
+            {
+                if (obj.gameObject.activeSelf)
+                {
+                    PushObject(obj.gameObject);
+                }
+            }
+        }
+    }
 }
 

@@ -87,6 +87,7 @@ public class FSM : MonoBehaviour
 
     public void Init()
     {
+        targetPosition = new Vector3();
         currentSpeed = initSpeed;
         currentLife = maxLife;
         transform.localEulerAngles = originAng;

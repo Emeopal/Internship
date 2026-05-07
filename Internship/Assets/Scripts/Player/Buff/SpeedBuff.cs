@@ -9,6 +9,10 @@ public class SpeedBuff : MonoBehaviour
     public float duration = 10;
     public Coroutine timer;
     public Player player;
+    private void OnEnable()
+    {
+        transform.eulerAngles = Vector3.zero;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("TankBuff"))

@@ -1219,7 +1219,7 @@ Rigidbody:
   m_GameObject: {fileID: 8231817387769290867}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 100
+  m_Drag: 1
   m_AngularDrag: 100
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -1304,8 +1304,10 @@ MonoBehaviour:
   enemyDown: {fileID: 1962164237218537335}
   m_hp: {fileID: 5800734377739789685}
   player: {fileID: 0}
+  rb: {fileID: 0}
   corpse: {fileID: 919132149155446097, guid: b6376c856ecd432479a13408cfb66bfa, type: 3}
   m_weapon: 2
+  targetPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &8331507617792027019
 GameObject:
   m_ObjectHideFlags: 0

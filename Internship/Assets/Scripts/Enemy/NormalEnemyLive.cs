@@ -177,7 +177,7 @@ public class EnemyChase : Istate
         if (distance > 0.1f)
         {
             direction.Normalize();
-            fsm.transform.position += direction * chaseSpeed * Time.deltaTime;
+            fsm.rb.velocity= direction * chaseSpeed;
         }
 
         // 下半身朝向移动方向

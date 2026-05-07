@@ -165,13 +165,7 @@ public class Level : MonoBehaviour
 
     public void CleanLevel()
     {
-        if (list != null)
-        {
-            foreach(GameObject temp in list)
-            {
-                ObjectPool.Instance.PushObject(temp);
-            }
-        }
+        ObjectPool.Instance.PushAllObjects();
     }
 
     public void LevelOn()
